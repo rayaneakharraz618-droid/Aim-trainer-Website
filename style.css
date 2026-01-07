@@ -1,4 +1,13 @@
 /* =========================
+   VARIABLES
+========================= */
+:root {
+    --combo-full: lime;
+    --combo-mid: orange;
+    --combo-low: red;
+}
+
+/* =========================
    BASE / GLOBAL
 ========================= */
 body {
@@ -44,6 +53,8 @@ body {
   transform-origin: left;
   transform: scaleX(1);
   transition: transform 0.1s linear;
+  transition: transform 0.1s linear, background 0.15s ease;
+
 }
 
 
@@ -118,6 +129,12 @@ body {
     100% { transform: scale(1); }
 }
 
+@keyframes flash {
+    0% { background-color: var(--self-bg);}
+    50% { background-color: white;}
+    100% { background-color: var(--self-bg);}
+}
+
 /* =========================
    EFFECT CLASSES
 ========================= */
@@ -127,4 +144,8 @@ body {
 
 .easterEgg {
     animation: easterEgg calc(var(--animationSpeed) * 1s) ease-in-out;
+}
+
+.flash {
+    animation: flash calc(var(--animationSpeed) * 1s) linear;
 }

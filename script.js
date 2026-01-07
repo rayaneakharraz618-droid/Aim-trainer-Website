@@ -70,6 +70,20 @@ function playSFX(sfx, volume = 0.4) {
     sfx.play();
 }
 
+function changeBGColor(id, color) {
+    id.style.background = color;
+}
+
+function syncBgColor(el) {
+    const bg = getComputedStyle(el).backgroundColor;
+    el.style.setProperty("--self-bg", bg);
+}
+
+function flash(target, speed = 0.5) {
+    syncBgColor(target);
+    playAnimation(target, "flash", speed);
+}  
+
 // Missing System
 let misses = 0;
 
@@ -94,6 +108,7 @@ target.addEventListener("click", (e) => {
     e.stopPropagation();
     score += combo;
     playSFX(popSFX, 0.5);
+    flash(target, 0.2);
 
     const rand = round(Math.random());
     if (rand < 0.1) {
@@ -108,6 +123,7 @@ target.addEventListener("click", (e) => {
         showComboText(round(combo));
         screenShake(Math.min(combo, 10));
         comboTimeLeft = comboResetTime;
+        flash(comboBar, 0.1);
     } else {
         combo = 1;
     }
@@ -131,8 +147,19 @@ function updateComboBar() {
     comboTimeLeft -= delta;
     comboTimeLeft = Math.max(0, comboTimeLeft);
 
+    const pct = comboTimeLeft / comboResetTime;
+
     comboBar.style.transform = `scaleX(${comboTimeLeft / comboResetTime})`;
-    
+
+    if (pct > 0.66) {
+        changeBGColor(comboBar, "var(--combo-full)");
+    } else if (pct > 0.33) {
+        changeBGColor(comboBar, "var(--combo-mid)");
+    } else {
+        changeBGColor(comboBar, "var(--combo-low)");
+    }
+
+
     requestAnimationFrame(updateComboBar);
 }
 
