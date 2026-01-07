@@ -117,6 +117,4 @@ target.addEventListener("click", (e) => {
     lastHitTime = time
 });
 
-
-
 moveTarget();
