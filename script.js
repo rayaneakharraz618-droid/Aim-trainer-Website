@@ -1,6 +1,7 @@
 const target = document.getElementById("target");
 const camera = document.getElementById("camera");
 const popSFX = document.getElementById("pop");
+const comboBar = document.getElementById("combo-bar");
 console.log("hello")
 
 // ------------------------
@@ -84,8 +85,10 @@ document.body.addEventListener("click", (e) => {
 let score = 0;
 let time;
 let lastHitTime = 0;
+
 let combo = 1;
 let comboResetTime = 800;
+let comboTimeLeft = comboResetTime;
 
 target.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -101,9 +104,10 @@ target.addEventListener("click", (e) => {
     time = Date.now();
     
     if (lastHitTime && time - lastHitTime < comboResetTime) {
-        combo += 1;
+        combo += 0.1;
         showComboText(round(combo));
         screenShake(Math.min(combo, 10));
+        comboTimeLeft = comboResetTime;
     } else {
         combo = 1;
     }
@@ -117,4 +121,20 @@ target.addEventListener("click", (e) => {
     lastHitTime = time
 });
 
+let lastFrame = Date.now();
+
+function updateComboBar() {
+    const now = Date.now();
+    const delta = now - lastFrame;
+    lastFrame = now;
+
+    comboTimeLeft -= delta;
+    comboTimeLeft = Math.max(0, comboTimeLeft);
+
+    comboBar.style.transform = `scaleX(${comboTimeLeft / comboResetTime})`;
+    
+    requestAnimationFrame(updateComboBar);
+}
+
+updateComboBar();
 moveTarget();
