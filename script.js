@@ -174,6 +174,7 @@ target.addEventListener("click", (e) => {
         }
     } else {
         combo = 1;
+        lastWholeCombo = 1;
     }
 
 
