@@ -7,6 +7,12 @@
     --combo-low: red;
 }
 
+.perfect { color: lime; }
+.great { color: gold; }
+.awesome { color: red; }
+.epic { color: purple; }
+.hyper { color: yellow; }
+
 /* =========================
    BASE / GLOBAL
 ========================= */

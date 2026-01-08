@@ -82,7 +82,41 @@ function syncBgColor(el) {
 function flash(target, speed = 0.5) {
     syncBgColor(target);
     playAnimation(target, "flash", speed);
-}  
+}
+
+function randInt(max) {
+  return Math.floor(Math.random() * (max + 1));
+}
+
+
+function showPopup (text, color) {
+
+    const popup = document.createElement("div");
+    popup.className = "combo-popup";
+    popup.textContent = text;
+
+    const rect = target.getBoundingClientRect();
+
+    popup.style.left = rect.right + 10 + "px";
+    popup.style.top = rect.top + rect.height / 2 + 20 + "px";
+
+    document.body.appendChild(popup);
+
+    popup.classList.add(color);
+
+    popup.addEventListener("animationend", () => {
+        popup.remove();
+    });
+}
+
+function showComboMotivaterPopup(amountOfWords) {
+    const rand = randInt(amountOfWords);
+
+    let text = comboMotivaterText[rand];
+    let color = CMColorClass[rand];
+
+    showPopup(text, color);
+} 
 
 // Missing System
 let misses = 0;
@@ -104,6 +138,11 @@ let combo = 1;
 let comboResetTime = 800;
 let comboTimeLeft = comboResetTime;
 
+let comboMotivaterText = ["PERFECT!", "GREAT!", "AWESOME!", "EPIC!", "HYPER!"]
+let CMColorClass = ["perfect", "great", "awesome", "epic", "hyper"]
+let lastWholeCombo = 1;
+let currentWhole;
+
 target.addEventListener("click", (e) => {
     e.stopPropagation();
     score += combo;
@@ -117,16 +156,26 @@ target.addEventListener("click", (e) => {
 
     
     time = Date.now();
+    const roundedCombo = Math.round(combo);
     
     if (lastHitTime && time - lastHitTime < comboResetTime) {
         combo += 0.1;
+        currentWhole = Math.floor(combo);
+
         showComboText(round(combo));
         screenShake(Math.min(combo, 10));
-        comboTimeLeft = comboResetTime;
         flash(comboBar, 0.1);
+
+        comboTimeLeft = comboResetTime;
+
+        if (currentWhole > lastWholeCombo) {
+            showComboMotivaterPopup(5);
+            lastWholeCombo = currentWhole;
+        }
     } else {
         combo = 1;
     }
+
 
     if (lastHitTime) {
         const delta = time - lastHitTime
